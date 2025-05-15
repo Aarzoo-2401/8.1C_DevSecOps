@@ -17,11 +17,18 @@ pipeline {
             }
         }
         stage('Security Scan') {
-            steps {
-                echo 'Performing security scan with npm audit...'
+    steps {
+        script {
+            if (fileExists('package.json')) {
+                echo 'Running npm audit...'
                 bat 'npm audit'
+            } else {
+                echo 'Skipping npm audit because package.json is missing.'
             }
         }
+    }
+}
+
         stage('Deploy to Staging') {
             steps {
                 echo 'Deploying to staging server...'
